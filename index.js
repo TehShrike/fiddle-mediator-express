@@ -1,25 +1,31 @@
 const express = require('express')
 const mannish = require('mannish')
+const glob = require('glob')
 
-const database = require('./database')
-const redis = require('./redis')
-const route = require('./route')
-const authentication = require('./authentication')
-const service = require('./service')
+// const route = require('./route')
 
-const configuration = process.env.configuration
-	? JSON.parse(process.env.configuration)
-	: require('./config')
+const config = {
+	redis: {},
+	database: {}
+}
 
 const mediator = mannish()
-database(configuration.database, mediator)
-redis(configuration.redis, mediator)
-service(mediator)
 
-const auth = authentication(mediator)
+function slurp(pattern) {
+	return glob.sync(pattern)
+		.filter(file => !/\.spec\.js$/.test(file))
+		.map(file => require(`./${file}`))
+}
+
+slurp('service/**/*.js')
+	.forEach(service => {
+		service({ config, mediator })
+	})
 
 const app = express()
-app.use(route({ mediator, auth }))
+
+app.use(require('./route/index')(mediator))
+
 app.listen(3000)
 
 console.log('Listening on port 3000')

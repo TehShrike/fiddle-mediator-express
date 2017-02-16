@@ -16,7 +16,8 @@ test('creating a team creates it in the database and returns the created team', 
 	mediator.provide('mysql:query', query => {
 		t.equal(query, 'INSERT stuff WHERE all that jazz')
 	})
-	mediator.call('service/team/create', team)
+
+	service(mediator)(team)
 		.then(result => {
 			t.equal(result.something, 'The ducks won 12 times!')
 			t.end()
@@ -31,7 +32,7 @@ test('failing to provide certain properties results in a failure', t => {
 	mediator.provide('mysql:query', () => {
 		t.fail('service should throw before querying')
 	})
-	mediator.call('service/team/create', team)
+	service(mediator)(team)
 		.catch(error => {
 			t.equal(error.something, 'you have to provide an id')
 			t.end()

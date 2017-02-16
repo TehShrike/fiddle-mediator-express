@@ -5,8 +5,14 @@
   "description": "Some sort of flim flam of a thing to see how a mediator pattern would look",
   "main": "index.js",
   "scripts": {
-    "test": "tape **.spec.js"
+    "test": "tape **.spec.js",
+    "start": "node index.js"
   },
   "author": "saibotsivad",
-  "license": "VOL"
+  "license": "VOL",
+  "dependencies": {
+    "express": "4.14.1",
+    "glob": "7.1.1",
+    "mannish": "3.0.0"
+  }
 }

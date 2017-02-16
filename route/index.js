@@ -1,11 +1,10 @@
 const express = require('express')
-const handleError = require('../helper/error-handler')
 const teamRoute = require('./team')
 
-module.exports = ({ mediator, auth }) => {
+module.exports = (mediator) => {
 	const router = express.Router()
 
-	router.use('/team', teamRoute({ mediator, auth }))
+	router.use('/team', teamRoute(mediator))
 	// and so on for the other routes
 
 	return router

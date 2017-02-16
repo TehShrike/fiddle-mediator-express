@@ -1,6 +1,10 @@
+const getTeamHelper = require('./get')
+
 module.exports = mediator => {
-	mediator.provide('service/team/update', (teamId, team) => {
-		return mediator.call('service/team/get', teamId)
+	const getTeam = getTeamHelper(mediator)
+
+	return (teamId, team) => {
+		return getTeam(teamId)
 			.then(databaseTeam => {
 				if (team.version < databaseTeam.version) {
 					throw new Error('somebody updated it before you')
@@ -8,7 +12,7 @@ module.exports = mediator => {
 					return mediator.call('mysql:query', generateQuery(teamId, team))
 				}
 			})
-	})
+	}
 }
 
 function generateQuery(teamId, team) {
